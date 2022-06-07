@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {Card} from "@mui/material";
 // @ts-ignore
 import popcorn from "./assets/popcorn.png"
+import {Link} from "react-router-dom";
 
 export interface Image {
     Id: number;
@@ -44,7 +45,7 @@ export interface RootObject  {
     TotalCount: number;
 }
 const MoviesList = () => {
-    const [movies, setMovies] = useState<Entity[]>(null);
+    const [movies, setMovies] = useState<Entity[]>();
     useEffect(() => {
         fetch("https://thebetter.bsgroup.eu/Media/GetMediaList", {
             method: "POST",
@@ -78,15 +79,16 @@ const MoviesList = () => {
 
     return (
         <div>Tutaj bedzie lista filmow
-            {movies.map((el, index)=>
-                <Card variant="outlined" key={el.Id}>
-                    {/*<img src={} />*/}
-                    {el.Title}
-                    <img src={getImageTypedFrame(el.Images)} style={{width: "120px", height: "80px"}}/>
-                </Card>
+            {movies.map((el, index) =>
+                <Link to={"/player/" + el.Id } >
+                    <Card variant="outlined" key={el.Id}>
+                        {el.Title}
+                        <img src={getImageTypedFrame(el.Images)} style={{width: "120px", height: "80px"}}/>
+                    </Card>
+                </Link>
             )}
         </div>
-    )
+    );
 }
 
 export default MoviesList;

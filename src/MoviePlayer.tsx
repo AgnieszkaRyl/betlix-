@@ -1,5 +1,6 @@
 import ReactPlayer from 'react-player'
 import {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
 
 export interface Movie {
     MediaId: number;
@@ -13,6 +14,7 @@ export interface Movie {
 }
 
 const MoviePlayer = () => {
+    const {id} = useParams();
 
     const [player, setPlayer] = useState<Movie>();
     useEffect(() => {
@@ -20,16 +22,19 @@ const MoviePlayer = () => {
             method: "POST",
             headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}`},
             body: JSON.stringify({
-                "MediaId": 17,
-                "StreamType": "TRIAL"
+                    "MediaId": Number(id),
+                    "StreamType": "TRIAL"
                 }
             )
         })
             .then(res => res.json())
-            .then(res=> setPlayer(res))
-            .catch(err=>console.error(err))
+            .then(res => {
+                setPlayer(res);
+            })
+            .catch(err => console.error(err))
     }, [])
 
+    console.log("id", id)
     if (!player) {
         return <div>Loading</div>
     }
@@ -38,18 +43,22 @@ const MoviePlayer = () => {
 
     return (
         <div>
-            <ReactPlayer
-                url={player.ContentUrl}
-                controls
-                config={{
-                    file: {
-                        forceDASH: true,
-                        forceHLS: true
-                    }
-                }}
-            />
-            tutaj zagra film
-
+            {player.ContentUrl ? (
+                <ReactPlayer
+                    url={player.ContentUrl}
+                    controls
+                    config={{
+                        file: {
+                            forceDASH: true,
+                            forceHLS: true
+                        }
+                    }}
+                />
+            ) : (
+                <div>
+                    Nie znaleziono tego filmu
+                    <img src="./assets/computer.png"/>
+                </div>)}
         </div>
     )
 };
