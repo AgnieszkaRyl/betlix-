@@ -69,6 +69,7 @@ const MoviesList = () => {
     const [carouselOffset, setCarouselOffset] = useState(0);
 
     console.log("width", cardItemWidth)
+    console.log("logged", logged)
     useEffect(() => {
         fetch("https://thebetter.bsgroup.eu/Media/GetMediaList", {
             method: "POST",

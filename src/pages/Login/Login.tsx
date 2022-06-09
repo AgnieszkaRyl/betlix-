@@ -3,13 +3,14 @@ import {useNavigate} from 'react-router-dom';
 import {VideoContext} from "../../context/ContextProvider";
 import {Button, Card, CardContent, TextField} from "@mui/material";
 import styles from "./Login.module.scss"
+import {isExpired} from "react-jwt";
 
 const Login = () => {
     const [errorMessages, setErrorMessages] = useState<boolean>(false);
     const [login, setLogin] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
-    const {setLogged, logged} = useContext(VideoContext);
+    const {loginAnnonymous, loginWithPassword, logged} = useContext(VideoContext);
 
     useEffect(() => {
         if (logged) {
@@ -17,11 +18,11 @@ const Login = () => {
         }
     }, []);
 
+
     const handleSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
         if (login === process.env.REACT_APP_LOGIN && password === process.env.REACT_APP_PASSWORD) {
-            setLogged(true);
-            localStorage.setItem("isLogged", "true");
+            loginWithPassword();
             navigate("/movies")
         } else {
             setErrorMessages(true);
@@ -31,8 +32,7 @@ const Login = () => {
     console.log(localStorage.getItem("token"));
 
     const continueAnonymous = () => {
-        setLogged(false);
-        localStorage.setItem("isLogged", "false")
+        loginAnnonymous();
         navigate("/movies");
     }
 

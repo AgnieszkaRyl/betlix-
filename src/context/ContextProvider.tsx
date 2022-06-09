@@ -1,13 +1,16 @@
 import {createContext, ReactNode, useEffect, useState} from "react";
-import {useJwt} from "react-jwt";
+import {isExpired, useJwt} from "react-jwt";
+import {json} from "stream/consumers";
 
 type ContextTypes = {
     logged: boolean;
-    setLogged: (_value: React.SetStateAction<boolean>) => void;
+    loginAnnonymous: () => void;
+    loginWithPassword: () => void;
 }
 export const VideoContext = createContext<ContextTypes>({
     logged: false,
-    setLogged: (_value: React.SetStateAction<boolean>)=> {}
+    loginAnnonymous: () => {},
+    loginWithPassword: () => {}
 });
 
 interface VideoContextProviderProps {
@@ -16,42 +19,74 @@ interface VideoContextProviderProps {
 
 const VideoContextProvider = ({children}: VideoContextProviderProps) => {
 
-    const [logged, setLogged] = useState<boolean>( false);
+    const [logged, setLogged] = useState<boolean>(() => {
+        const loggedData = localStorage.getItem("isLogged");
+        if (loggedData) {
+            return JSON.parse(loggedData)
+        }
+        return false
+    });
     const {isExpired} = useJwt(localStorage.getItem("token") || "");
 
-    useEffect(() => {
-            fetch("https://thebetter.bsgroup.eu/Authorization/SignIn", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: logged ? JSON.stringify({
-                        "Username": process.env.REACT_APP_LOGIN,
-                        "Password": process.env.REACT_APP_PASSWORD,
-                        "Device": {
-                            "PlatformCode": "WEB",
-                            "Name": "7a6a86e5-356f-4795-8998-305e1b205531"
-                        }
+    const loginAnnonymous = () => {
+        fetch("https://thebetter.bsgroup.eu/Authorization/SignIn", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                    "Device": {
+                        "PlatformCode": "WEB",
+                        "Name": "7a6a86e5-356f-4795-8998-305e1b205531"
                     }
-                ) : JSON.stringify({
-                        "Device": {
-                            "PlatformCode": "WEB",
-                            "Name": "7a6a86e5-356f-4795-8998-305e1b205531"
-                        }
-                    }
-                )
+                }
+            )
+        })
+            .then(res => res.json())
+            .then((res) => {
+                localStorage.setItem("token", res.AuthorizationToken.Token);
+                localStorage.setItem("isLogged", JSON.stringify(false));
+                setLogged(false);
+                console.log(res)
             })
-                .then(res => res.json())
-                .then((res) => {
-                    localStorage.setItem("token", res.AuthorizationToken.Token);
-                    console.log(res)
-                })
-                .catch(err => console.error(err))
-    }, [isExpired, logged])
+            .catch(err => console.error(err))
+    }
+
+    const loginWithPassword = () => {
+        fetch("https://thebetter.bsgroup.eu/Authorization/SignIn", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                    "Username": process.env.REACT_APP_LOGIN,
+                    "Password": process.env.REACT_APP_PASSWORD,
+                    "Device": {
+                        "PlatformCode": "WEB",
+                        "Name": "7a6a86e5-356f-4795-8998-305e1b205531"
+                    }
+                }
+            )
+        })
+            .then(res => res.json())
+            .then((res) => {
+                localStorage.setItem("token", res.AuthorizationToken.Token);
+                localStorage.setItem("isLogged", JSON.stringify(true));
+                setLogged(true);
+                console.log(res)
+            })
+            .catch(err => console.error(err))
+    }
+
+    useEffect(()=>{
+        if (isExpired){
+            logged ? loginWithPassword() : loginAnnonymous()
+        }
+    },[isExpired])
+
     console.log(localStorage.getItem("token"))
 
     return (
         <VideoContext.Provider value={{
             logged,
-            setLogged
+            loginWithPassword,
+            loginAnnonymous
         }}>
             {children}
         </VideoContext.Provider>

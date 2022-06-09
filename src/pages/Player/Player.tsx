@@ -57,6 +57,8 @@ const Player = () => {
     const isMobile = width<=767;
 
     console.log(player)
+    console.log("logged", logged)
+    console.log("logged z ls",localStorage.getItem("isLogged"))
     return (
         <div className="container">
             {player.ContentUrl && foundMovie ? (
