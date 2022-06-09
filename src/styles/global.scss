@@ -1,0 +1,41 @@
+@import "responsivness";
+
+.container {
+  flex-grow: 1;
+  margin: 0 auto;
+  position: relative;
+  max-width: 1200px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @include tablet{
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+.button-icon {
+  min-width: 40px;
+  min-height: 40px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.link {
+  color: #e26e6e;
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  gap:8px;
+  line-height: 100%;
+}
+.link-icon {
+  fill: #e26e6e;
+  width: 16px;
+  height: 16px;
+}

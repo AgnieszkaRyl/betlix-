@@ -1,0 +1,10 @@
+@import "./src/styles/responsivness";
+.navbar {
+  width: 100%;
+  padding: 8px;
+  background-color: #42a5f5;
+  color: white;
+  @include tablet {
+    padding: 16px;
+  }
+}
