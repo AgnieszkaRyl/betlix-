@@ -1,5 +1,5 @@
 import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
-import MoviesScreen from "./pages/Movies/MoviesScreen";
+import MoviesScreen from "./pages/Movies/Movies";
 import Player from "./pages/Player/Player";
 import Login from "./pages/Login/Login";
 import ContextProvider from "./context/ContextProvider";
