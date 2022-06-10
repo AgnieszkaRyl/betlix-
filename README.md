@@ -6,7 +6,8 @@ The goal was to create an application with the ability of browsing and watching 
 
 Current API for registered users shares refresh token, in current implemmentation after expiring token, the token is deleted and user is forced to log in again, in the future it could be replaced with refreshing expiring token using "refresh token" until the moment when user logs off himself/herself.  
 
-### `npm start`
+
+## `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
