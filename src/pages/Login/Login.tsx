@@ -37,8 +37,6 @@ const Login = () => {
       <Card sx={{ minWidth: 275, maxWidth: 330 }}>
         <CardContent>
           <h2>Logowanie</h2>
-          <p>{process.env.REACT_APP_LOGIN} </p>
-          <p>{process.env.REACT_APP_PASSWORD}</p>
           <form onSubmit={handleSubmit}>
             <div>
               <TextField
