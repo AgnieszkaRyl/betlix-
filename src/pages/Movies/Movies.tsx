@@ -15,15 +15,9 @@ const MoviesList = () => {
   const [moviesThirdList, setMoviesThirdList] = useState<Entity[]>();
 
   useEffect(() => {
-    fetchMovies(3)
-      .then((res) => setMovies(res.Entities))
-      .catch((err) => console.error(err));
-    fetchMovies(6)
-      .then((res) => setMoviesSecondList(res.Entities))
-      .catch((err) => console.log(err));
-    fetchMovies(13)
-      .then((res) => setMoviesThirdList(res.Entities))
-      .catch((err) => console.log(err));
+    fetchMovies(3).then((res) => setMovies(res.Entities));
+    fetchMovies(6).then((res) => setMoviesSecondList(res.Entities));
+    fetchMovies(13).then((res) => setMoviesThirdList(res.Entities));
   }, []);
 
   if (!movies || !moviesSecondList || !moviesThirdList) {
@@ -48,7 +42,7 @@ const MoviesList = () => {
             modules={[Navigation]}
           >
             {moviesList.list.map((movie: Entity) => (
-              <SwiperSlide>
+              <SwiperSlide key={movie.Id}>
                 <MovieTile movie={movie} />
               </SwiperSlide>
             ))}

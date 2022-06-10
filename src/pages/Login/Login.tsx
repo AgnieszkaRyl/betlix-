@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContextProvider";
 import { Button, Card, CardContent, TextField } from "@mui/material";
 import styles from "./Login.module.scss";
-import { Routes, tokenKey } from "../../constants/constats";
+import { Routes, tokenKey } from "../../constants/constants";
 
 const Login = () => {
   const [login, setLogin] = useState<string>("");
@@ -12,7 +12,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const { loginAnnonymous, loginWithPassword, logged } = useAuth();
+  const { loginAnonymous, loginWithPassword, logged } = useAuth();
 
   useEffect(() => {
     if (logged) {
@@ -28,10 +28,8 @@ const Login = () => {
       .catch(() => setErrorMessages(true));
   };
 
-  console.log(localStorage.getItem(tokenKey));
-
   const continueAnonymous = () => {
-    loginAnnonymous().then(() => navigate(Routes.movies));
+    loginAnonymous().then(() => navigate(Routes.movies));
   };
 
   return (

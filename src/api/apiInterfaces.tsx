@@ -56,7 +56,7 @@ export interface RootObject {
 
 export type ContextTypes = {
   logged: boolean;
-  loginAnnonymous: () => Promise<void>;
+  loginAnonymous: () => Promise<void>;
   loginWithPassword: (login: string, password: string) => Promise<void>;
   isLoggedAnyUser: boolean;
 };

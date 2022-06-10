@@ -1,12 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { loggedKey, tokenExpiryKey, tokenKey } from "../constants/constats";
+import { loggedKey, tokenExpiryKey, tokenKey } from "../constants/constants";
 import { ContextTypes, VideoContextProviderProps } from "../api/apiInterfaces";
 import { fetchAnonymous, fetchLogged } from "../api/apiFunctions";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 export const AuthContext = createContext<ContextTypes>({
   logged: false,
-  loginAnnonymous: () => Promise.resolve(),
+  loginAnonymous: () => Promise.resolve(),
   loginWithPassword: () => Promise.resolve(),
   isLoggedAnyUser: false,
 });
@@ -23,7 +23,7 @@ const AuthContextProvider = ({ children }: VideoContextProviderProps) => {
 
   const isLoggedAnyUser = tokenLs ? true : false;
 
-  const loginAnnonymous = () => {
+  const loginAnonymous = () => {
     return fetchAnonymous().then((res) => {
       setTokenLs(res.AuthorizationToken.Token);
       setLoggedLs(false);
@@ -48,21 +48,18 @@ const AuthContextProvider = ({ children }: VideoContextProviderProps) => {
     }
   };
   const isValidTokenConst = isValidToken();
-  console.log("is valid token, ", isValidToken());
   useEffect(() => {
     if (!isValidTokenConst) {
       localStorage.clear();
     }
   }, [isValidTokenConst]);
 
-  // console.log(localStorage.getItem(tokenKey));
-
   return (
     <AuthContext.Provider
       value={{
         logged: loggedLs,
         loginWithPassword,
-        loginAnnonymous,
+        loginAnonymous,
         isLoggedAnyUser,
       }}
     >

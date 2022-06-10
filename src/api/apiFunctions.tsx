@@ -1,4 +1,4 @@
-import { tokenKey } from "../constants/constats";
+import { tokenKey } from "../constants/constants";
 
 export const fetchAnonymous = () => {
   return fetch("https://thebetter.bsgroup.eu/Authorization/SignIn", {

@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContextProvider";
 import { Link } from "react-router-dom";
 import login from "./../../assets/logIn.svg";
 import classNames from "classnames";
-import { Routes } from "./../../constants/constats";
+import { Routes } from "../../constants/constants";
 
 const Navbar = () => {
   const { logged, isLoggedAnyUser } = useAuth();
