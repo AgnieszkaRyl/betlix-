@@ -4,7 +4,22 @@
   padding: 8px;
   background-color: #42a5f5;
   color: white;
+  display: flex;
+  justify-content: space-between;
   @include tablet {
     padding: 16px;
   }
+}
+
+.icon {
+  height: 16px;
+  width: 16px;
+}
+.title,.title:hover {
+  color: black;
+  text-decoration: none;
+}
+.navbarElements {
+  display: flex;
+  justify-content: space-between;
 }

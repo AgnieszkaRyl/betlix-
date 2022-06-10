@@ -1,0 +1,33 @@
+.movieContainer {
+  width: 100%;
+  position: relative;
+  margin-right: 10px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: black;
+
+  &:hover {
+    width: 120%;
+    height: 120%;
+    transition: 0.3s ease-out;
+    z-index: 10;
+  }
+}
+
+.link {
+  text-decoration: none;
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 1.8;
+}
+
+.title {
+  margin-top: 8px;
+  color: #282c34;
+}
+

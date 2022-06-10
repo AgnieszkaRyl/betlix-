@@ -1,31 +1,5 @@
-.movieContainer {
-  width: 120px;
-  min-width: 120px;
-  position: relative;
-  margin-right: 10px;
-}
-
-.wrapper {
-  max-width: 1200px;
-  position: relative;
-  width: 100%;
-}
-
-.trackInner {
-  overflow: hidden;
-}
-.track {
-  display: inline-flex;
-  transition: transform 0.5s ease-out;
-}
-.button {
-  height: 20px;
-  width: 20px;
-  background-color: white;
-}
-.link {
-  background-color: red;
-}
-.linkJeden {
-  color: green
+.listTitle {
+  border-bottom: 1px solid #a5a6ab;
+  font-size: 20px;
+  font-weight: 700;
 }

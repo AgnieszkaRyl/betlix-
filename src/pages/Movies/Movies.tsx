@@ -1,120 +1,62 @@
-import {useContext, useEffect, useRef, useState} from "react";
-import {Card} from "@mui/material";
-import popcorn from "../../assets/popcorn.png"
-import {Link} from "react-router-dom";
-import {VideoContext} from "../../context/ContextProvider";
+import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner/Spinner";
 import styles from "./Movies.module.scss";
-import {useWindowSize} from "../../hooks/useWindowSize";
-import arrowRight from "./../../assets/arrowRight.svg"
-import arrowLeft from "./../../assets/arrowLeft.svg"
-import classNames from "classnames";
-import {Swiper, SwiperSlide} from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import {Navigation} from "swiper";
-
-export interface Image {
-    Id: number;
-    MediaId: number;
-    PlatformCode: string;
-    ImageTypeCode: string;
-    Url: string;
-    Width: number;
-    Height: number;
-}
-
-export interface Product {
-    Id: number;
-}
-
-export interface Entity {
-    Id: number;
-    Guid: string;
-    MediaTypeCode: string;
-    MediaTypeDisplayName: string;
-    MediaAgeRestrictionValueMin: number;
-    MediaAgeRestrictionImageUrl: string;
-    Title: string;
-    Description: string;
-    Year: number;
-    Duration: number;
-    IsTrialContentAvailable: boolean;
-    AvailableFrom: Date;
-    Images: Image[];
-    Products: Product[];
-    StartDateTime?: Date;
-}
-
-export interface RootObject {
-    CacheDataValidTo: Date;
-    SourceType: string;
-    Entities: Entity[];
-    PageSize: number;
-    PageNumber: number;
-    TotalCount: number;
-}
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper";
+import { Entity } from "../../api/apiInterfaces";
+import { fetchMovies } from "../../api/apiFunctions";
+import { MovieTile } from "../../components/MovieTile/MovieTile";
 
 const MoviesList = () => {
-    const [movies, setMovies] = useState<Entity[]>();
-    const {logged} = useContext(VideoContext);
+  const [movies, setMovies] = useState<Entity[]>();
+  const [moviesSecondList, setMoviesSecondList] = useState<Entity[]>();
+  const [moviesThirdList, setMoviesThirdList] = useState<Entity[]>();
 
+  useEffect(() => {
+    fetchMovies(3)
+      .then((res) => setMovies(res.Entities))
+      .catch((err) => console.error(err));
+    fetchMovies(6)
+      .then((res) => setMoviesSecondList(res.Entities))
+      .catch((err) => console.log(err));
+    fetchMovies(13)
+      .then((res) => setMoviesThirdList(res.Entities))
+      .catch((err) => console.log(err));
+  }, []);
 
-    console.log("logged", logged)
-    useEffect(() => {
-        fetch("https://thebetter.bsgroup.eu/Media/GetMediaList", {
-            method: "POST",
-            headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}`},
-            body: JSON.stringify({
-                    "MediaListId": 3,
-                    "IncludeCategories": false,
-                    "IncludeImages": true,
-                    "IncludeMedia": false,
-                    "PageNumber": 1,
-                    "PageSize": 15
-                }
-            )
-        })
-            .then(res => res.json())
-            .then(res => setMovies(res.Entities))
-            .catch(err => console.error(err))
-    }, [])
+  if (!movies || !moviesSecondList || !moviesThirdList) {
+    return <Spinner />;
+  }
 
-    const getImageTypedFrame = (images: Image[]): string => {
-        const imageFrame = images.find(image => image.ImageTypeCode === "FRAME")
-        if (imageFrame === undefined) {
-            return popcorn
-        }
-        return imageFrame.Url;
-    }
-    if (!movies) {
-        return <Spinner/>
-    }
-    // console.log(movies)
-    // console.log("logged", logged)
+  const allMoviesList = [
+    { list: movies, title: "Na lepszy dzień", id: 0 },
+    { list: moviesSecondList, title: "Chwila rozrywki", id: 1 },
+    { list: moviesThirdList, title: "Światowe sensacje", id: 2 },
+  ];
 
-
-    return (
-        <div className="container">Tutaj bedzie lista filmow
-            <Swiper
-                spaceBetween={10}
-                slidesPerView={4}
-                navigation
-                modules={[Navigation]}
-            >
-                {movies.map((el) =>
-                    <SwiperSlide>
-                        <Link to={"/player/" + el.Id} key={el.Id} className={classNames(styles.linkJeden, styles.link)}>
-                            <Card variant="outlined" className={styles.movieContainer}>
-                                {el.Title}
-                                <img src={getImageTypedFrame(el.Images)} style={{width: "120px", height: "80px"}}/>
-                            </Card>
-                        </Link>
-                    </SwiperSlide>
-                )}
-            </Swiper>
+  return (
+    <div className="container">
+      {allMoviesList.map((moviesList) => (
+        <div key={moviesList.id}>
+          <p className={styles.listTitle}>{moviesList.title}</p>
+          <Swiper
+            spaceBetween={30}
+            slidesPerView={3}
+            navigation
+            modules={[Navigation]}
+          >
+            {moviesList.list.map((movie: Entity) => (
+              <SwiperSlide>
+                <MovieTile movie={movie} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
-    );
-}
+      ))}
+    </div>
+  );
+};
 
 export default MoviesList;
